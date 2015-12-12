@@ -5,7 +5,7 @@ import pandas_datareader.data as web
 
 
 class TestEdgarIndex(tm.TestCase):
-    def test_get_index(self):
+    def test_get_full_index(self):
         ed = web.DataReader('full', 'edgar-index')
         assert len(ed > 1000)
 
