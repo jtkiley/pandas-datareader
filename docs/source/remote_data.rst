@@ -407,5 +407,5 @@ Company filing index from EDGAR (SEC).
 .. ipython:: python
 
     import pandas_datareader.data as web
-    ed = web.DataReader('master', 'edgar-index')
+    ed = web.DataReader('full', 'edgar-index')
     ed[:5]

@@ -6,7 +6,7 @@ from pandas.compat import BytesIO
 from pandas_datareader.base import _BaseReader
 
 
-_URL = 'ftp://ftp.sec.gov/edgar/full-index/master.zip'
+_URL_FULL = 'ftp://ftp.sec.gov/edgar/full-index/master.zip'
 _COLUMNS = ['cik', 'company_name', 'form_type', 'date_filed', 'filename']
 
 
@@ -22,7 +22,7 @@ class EdgarIndexReader(_BaseReader):
 
     @property
     def url(self):
-        return _URL
+        return _URL_FULL
 
     def _read_zipfile(self, url):
 

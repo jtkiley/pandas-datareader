@@ -525,7 +525,7 @@ class TestDataReader(tm.TestCase):
         assert isinstance(vix, DataFrame)
 
     def test_read_edgar_index(self):
-        ed = DataReader("master", "edgar-index")
+        ed = DataReader("full", "edgar-index")
         assert isinstance(ed, DataFrame)
 
     def test_not_implemented(self):
