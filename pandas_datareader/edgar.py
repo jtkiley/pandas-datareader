@@ -1,16 +1,9 @@
-import time
-import tempfile
 from pandas import read_csv
 from pandas.io.common import ZipFile
 from pandas.compat import StringIO
+from pandas.compat import BytesIO
 
 from pandas_datareader.base import _BaseReader
-from pandas_datareader._utils import RemoteDataError
-
-try:
-    from urllib.request import urlopen
-except ImportError:
-    from urllib import urlopen
 
 
 _URL = 'ftp://ftp.sec.gov/edgar/full-index/master.zip'
@@ -33,13 +26,10 @@ class EdgarIndexReader(_BaseReader):
 
     def _read_zipfile(self, url):
 
-        raw = self._get_response(url)
+        zipf = BytesIO(self._get_response(url).content)
 
-        with tempfile.TemporaryFile() as tmpf:
-            tmpf.write(raw)
-
-            with ZipFile(tmpf, 'r') as zf:
-                data = zf.open(zf.namelist()[0]).read().decode()
+        with ZipFile(zipf, 'r') as zf:
+            data = zf.open(zf.namelist()[0]).read().decode()
 
         return data
 
@@ -47,26 +37,7 @@ class EdgarIndexReader(_BaseReader):
 
         index_file = StringIO(self._read_zipfile(url))
 
-        edgar_index = read_csv(index_file, delimiter='|', header=None,
-                               index_col=False, skiprows=10, names=_COLUMNS,
-                               low_memory=False)
-        return edgar_index
-
-    def _get_response(self, url, params=None):
-        """ Use urllib to get FTP file.
-
-        Parameters
-        ----------
-        url : str
-            target URL
-        params : dict or None
-            parameters ignored, as it's FTP.
-        """
-
-        for i in range(self.retry_count + 1):
-            response = urlopen(url).read()
-            if response is not None:
-                return response
-            time.sleep(self.pause)
-
-        raise RemoteDataError('Unable to read URL: {0}'.format(url))
+        index = read_csv(index_file, delimiter='|', header=None,
+                         index_col=False, skiprows=10, names=_COLUMNS,
+                         low_memory=False)
+        return index
