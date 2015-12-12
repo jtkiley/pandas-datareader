@@ -1,12 +1,17 @@
 import time
 import tempfile
-import urllib
 from pandas import read_csv
 from pandas.io.common import ZipFile
 from pandas.compat import StringIO
 
 from pandas_datareader.base import _BaseReader
 from pandas_datareader._utils import RemoteDataError
+
+try:
+    from urllib.request import urlopen
+except ImportError:
+    from urllib import urlopen
+
 
 _URL = 'ftp://ftp.sec.gov/edgar/full-index/master.zip'
 _COLUMNS = ['cik', 'company_name', 'form_type', 'date_filed', 'filename']
@@ -59,7 +64,7 @@ class EdgarIndexReader(_BaseReader):
         """
 
         for i in range(self.retry_count + 1):
-            response = urllib.request.urlopen(url).read()
+            response = urlopen(url).read()
             if response is not None:
                 return response
             time.sleep(self.pause)
