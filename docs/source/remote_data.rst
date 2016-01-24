@@ -404,8 +404,19 @@ EDGAR Index
 
 Company filing index from EDGAR (SEC).
 
+The daily indices get large quickly (i.e. 20,000 rows a week), so use
+discretion in pulling long time windows. If they start refusing your
+ connections, you should be able to reconnect a few minutes later.
+
+
 .. ipython:: python
 
     import pandas_datareader.data as web
     ed = web.DataReader('full', 'edgar-index')
+    ed[:5]
+
+.. ipython:: python
+
+    import pandas_datareader.data as web
+    ed = web.DataReader('daily', 'edgar-index', '1998-05-18', '1998-05-18')
     ed[:5]
